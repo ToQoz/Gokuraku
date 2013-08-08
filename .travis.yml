@@ -1,0 +1,9 @@
+language: go
+before_script: go get github.com/stretchr/gorc
+script: gorc
+notifications:
+  email:
+    recipients:
+      - toqoz403@gmail.com
+    on_success: change
+    on_failure: always

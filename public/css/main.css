@@ -1,0 +1,72 @@
+/* Override Bootstrap */
+.list-group-item {
+  padding: 10px;
+}
+/* /Override Bootstrap */
+
+img {
+  -webkit-box-shadow: 0px 0px 5px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0px 5px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0px 5px rgba(50, 50, 50, 0.75);
+}
+
+.track-description {
+  padding-top: 15px;
+  word-wrap: break-word;
+}
+.track-user {
+  border-bottom: 1px solid #CCC;
+  padding-bottom: 10px;
+  width: auto;
+}
+
+.logo {
+  font-size: 100%;
+  margin: 0;
+}
+
+h1 {
+  font-size: 17px;
+  margin: 0 0 10px 0;
+}
+
+h2 {
+  font-size: 17px;
+  margin: 0 0 10px 0;
+}
+
+#post-track {
+  margin-bottom: 20px;
+}
+
+.wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.navbar-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.track-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.user-thumbnail {
+  width: 40px;
+  height: 40px;
+}
+
+.track-thumbnail {
+  width: 200px;
+  height: 200px;
+}
+.track-title:before {
+  content: "▶ ";
+}
+
+.track-list-track-title {
+  font-size: 13px;
+}
