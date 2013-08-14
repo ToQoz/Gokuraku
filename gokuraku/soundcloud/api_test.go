@@ -2,7 +2,7 @@ package soundcloud
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/ToQoz/Gokuraku/gokuraku/test_helpers"
 	"testing"
 )
 
@@ -71,18 +71,12 @@ func TestMappingJsonToItem(t *testing.T) {
 		panic(err)
 	}
 
-	assertEqual(t, 93919708, item.Id)
-	assertEqual(t, "Hop.Hip", item.Genre)
-	assertEqual(t, "ignorntsht[TWRK]", item.Title)
-	assertEqual(t, "http://soundcloud.com/knxwledge/ignorntsht-twrk", item.Url)
-	assertEqual(t, "http://gloof.bandcamp.com/album/wraptaypes-prt-5", item.Description)
-	assertEqual(t, "http://i1.sndcdn.com/artworks-000048980129-sa1mue-large.jpg?5ffe3cd", item.ImageUrl)
-	assertEqual(t, "http://i1.sndcdn.com/avatars-000043150214-63rk2k-large.jpg?5ffe3cd", item.User.ImageUrl)
-	assertEqual(t, "http://soundcloud.com/knxwledge", item.User.Url)
-}
-
-func assertEqual(t *testing.T, expected, actual interface{}) {
-	if expected != actual {
-		t.Error(fmt.Sprintf("expected <%s>, but got <%s>", expected, actual))
-	}
+	test_helpers.AssertEqual(t, 93919708, item.Id)
+	test_helpers.AssertEqual(t, "Hop.Hip", item.Genre)
+	test_helpers.AssertEqual(t, "ignorntsht[TWRK]", item.Title)
+	test_helpers.AssertEqual(t, "http://soundcloud.com/knxwledge/ignorntsht-twrk", item.Url)
+	test_helpers.AssertEqual(t, "http://gloof.bandcamp.com/album/wraptaypes-prt-5", item.Description)
+	test_helpers.AssertEqual(t, "http://i1.sndcdn.com/artworks-000048980129-sa1mue-large.jpg?5ffe3cd", item.ImageUrl)
+	test_helpers.AssertEqual(t, "http://i1.sndcdn.com/avatars-000043150214-63rk2k-large.jpg?5ffe3cd", item.User.ImageUrl)
+	test_helpers.AssertEqual(t, "http://soundcloud.com/knxwledge", item.User.Url)
 }

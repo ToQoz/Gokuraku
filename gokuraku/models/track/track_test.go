@@ -1,7 +1,7 @@
 package track
 
 import (
-	"fmt"
+	"github.com/ToQoz/Gokuraku/gokuraku/test_helpers"
 	"strconv"
 	"testing"
 	"time"
@@ -31,7 +31,7 @@ func TestValidateId(t *testing.T) {
 		return
 	}
 
-	assertEqual(t, "This item doesn't have ID", err.Error())
+	test_helpers.AssertEqual(t, "This item doesn't have ID", err.Error())
 }
 
 func TestValidateTitle(t *testing.T) {
@@ -58,7 +58,7 @@ func TestValidateTitle(t *testing.T) {
 		return
 	}
 
-	assertEqual(t, "This item doesn't have Title", err.Error())
+	test_helpers.AssertEqual(t, "This item doesn't have Title", err.Error())
 }
 
 func TestValidateUrl(t *testing.T) {
@@ -85,7 +85,7 @@ func TestValidateUrl(t *testing.T) {
 		return
 	}
 
-	assertEqual(t, "This item doesn't have Url", err.Error())
+	test_helpers.AssertEqual(t, "This item doesn't have Url", err.Error())
 }
 
 func TestValidateUserName(t *testing.T) {
@@ -112,7 +112,7 @@ func TestValidateUserName(t *testing.T) {
 		return
 	}
 
-	assertEqual(t, "This item doesn't have UserName", err.Error())
+	test_helpers.AssertEqual(t, "This item doesn't have UserName", err.Error())
 }
 
 func TestValidateUserUrl(t *testing.T) {
@@ -139,11 +139,5 @@ func TestValidateUserUrl(t *testing.T) {
 		return
 	}
 
-	assertEqual(t, "This item doesn't have UserUrl", err.Error())
-}
-
-func assertEqual(t *testing.T, expected, actual interface{}) {
-	if expected != actual {
-		t.Error(fmt.Sprintf("expected <%s>, but got <%s>", expected, actual))
-	}
+	test_helpers.AssertEqual(t, "This item doesn't have UserUrl", err.Error())
 }
