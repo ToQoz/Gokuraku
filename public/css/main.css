@@ -2,29 +2,8 @@
 .list-group-item {
   padding: 10px;
 }
-/* /Override Bootstrap */
 
-img {
-  -webkit-box-shadow: 0px 0px 5px rgba(50, 50, 50, 0.75);
-  -moz-box-shadow:    0px 0px 5px rgba(50, 50, 50, 0.75);
-  box-shadow:         0px 0px 5px rgba(50, 50, 50, 0.75);
-}
-
-.track-description {
-  padding-top: 15px;
-  word-wrap: break-word;
-}
-.track-user {
-  border-bottom: 1px solid #CCC;
-  padding-bottom: 10px;
-  width: auto;
-}
-
-.logo {
-  font-size: 100%;
-  margin: 0;
-}
-
+/* Base */
 h1 {
   font-size: 17px;
   margin: 0 0 10px 0;
@@ -35,10 +14,11 @@ h2 {
   margin: 0 0 10px 0;
 }
 
-#post-track {
-  margin-bottom: 20px;
+img {
+  box-shadow:         0px 0px 5px rgba(50, 50, 50, 0.75);
 }
 
+/* Layout */
 .wrapper {
   max-width: 1300px;
   margin: 0 auto;
@@ -49,11 +29,26 @@ h2 {
   margin: 0 auto;
 }
 
+/* Module */
+.logo {
+  font-size: 100%;
+  margin: 0;
+}
+
+#post-track {
+  margin-bottom: 20px;
+}
+
+.track-list-track-title {
+  font-size: 13px;
+}
+
 .track-container {
   width: 100%;
   margin-bottom: 20px;
 }
 
+/* Module Track */
 .user-thumbnail {
   width: 40px;
   height: 40px;
@@ -67,6 +62,12 @@ h2 {
   content: "▶ ";
 }
 
-.track-list-track-title {
-  font-size: 13px;
+.track-description {
+  padding-top: 15px;
+  word-wrap: break-word;
+}
+.track-user {
+  border-bottom: 1px solid #CCC;
+  padding-bottom: 10px;
+  width: auto;
 }
