@@ -3,7 +3,6 @@ package gokuraku
 import (
 	"flag"
 	"fmt"
-	"log"
 )
 
 var Config = &struct {
@@ -28,9 +27,10 @@ func init() {
 	Config.RedisPassword = *redis_password
 	Config.SoundcloudClientId = *soundcloud_client_id
 
-	if Config.SoundcloudClientId == "" {
-		log.Fatalln("require soundcloud_client_id")
-	}
+	// Disable for go test... if I come up with good idea. These will be reborn...
+	// if Config.SoundcloudClientId == "" {
+	// 	log.Fatalln("require soundcloud_client_id")
+	// }
 
 	fmt.Println("<Current Config>")
 	fmt.Println("  * You can set your custom value by flag. see `$ gokuraku --help`")

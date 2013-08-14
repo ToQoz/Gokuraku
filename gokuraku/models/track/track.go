@@ -37,7 +37,7 @@ func GetRandam() *Track {
 	defer redisClient.Close()
 
 	track_id, _ := redis.String(redisClient.Do("SRANDMEMBER", "gokuraku:track-ids"))
-	values, err := redis.Values(redisClient.Do("HGETALL", redisKeyForTrackId(track_id)))
+	values, err := redis.Values(redisClient.Do("HGETALL", "gokuraku:track:"+track_id))
 	if err != nil {
 		panic(err)
 	}
@@ -61,9 +61,17 @@ func UpdateCurrent() error {
 	redisClient := redis.Get()
 	defer redisClient.Close()
 
+	t := GetRandam()
+	err = t.Validate()
+
+	if err != nil {
+		t.Destroy()
+		t = GetRandam()
+	}
+
 	_, err = redisClient.Do(
 		"HMSET", "gokuraku:current-track",
-		"track_id", GetRandam().Id,
+		"track_id", t.Id,
 		"started_at", strconv.FormatInt(time.Now().Unix(), 10),
 	)
 
@@ -155,12 +163,37 @@ func NewFromUrl(track_url string) (*Track, error) {
 	}
 }
 
+func (t *Track) Destroy() error {
+	var err error
+	redisClient := redis.Get()
+	defer redisClient.Close()
+	_, err = redisClient.Do("SREM", "gokuraku:track-ids", t.Id)
+
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	_, err = redisClient.Do("DEL", "gokuraku:track:"+t.Id)
+
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	return nil
+}
+
 func (t *Track) Save() error {
 	var err error
 	redisClient := redis.Get()
 	defer redisClient.Close()
 
 	_, err = redisClient.Do("SADD", "gokuraku:track-ids", t.Id)
+
+	if err != nil {
+		return err
+	}
+
+	err = t.Validate()
 
 	if err != nil {
 		return err
@@ -232,7 +265,7 @@ func Find(id string) (Track, error) {
 	redisClient := redis.Get()
 	defer redisClient.Close()
 
-	values, err := redis.Values(redisClient.Do("HGETALL", redisKeyForTrackId(id)))
+	values, err := redis.Values(redisClient.Do("HGETALL", "gokuraku:track:"+id))
 	if err != nil {
 		log.Panicln(err)
 	}
@@ -246,6 +279,26 @@ func Find(id string) (Track, error) {
 	return track, nil
 }
 
-func redisKeyForTrackId(id string) string {
-	return "gokuraku:track:" + id
+func (t Track) Validate() error {
+	if t.Id == "" {
+		return errors.New("This item doesn't have ID")
+	}
+
+	if t.Url == "" {
+		return errors.New("This item doesn't have Url")
+	}
+
+	if t.Title == "" {
+		return errors.New("This item doesn't have Title")
+	}
+
+	if t.UserName == "" {
+		return errors.New("This item doesn't have UserName")
+	}
+
+	if t.UserUrl == "" {
+		return errors.New("This item doesn't have UserUrl")
+	}
+
+	return nil
 }
