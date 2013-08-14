@@ -158,9 +158,9 @@ func NewFromUrl(track_url string) (*Track, error) {
 			CreatedAt:    now,
 		}
 		return &track, nil
-	} else {
-		return nil, errors.New("Unknown service " + parsedUrl.Host)
 	}
+
+	return nil, errors.New("Unknown service " + parsedUrl.Host)
 }
 
 func (t *Track) Destroy() error {
