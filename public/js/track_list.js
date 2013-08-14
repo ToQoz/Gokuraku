@@ -14,10 +14,12 @@
   };
 
   function update() {
-    API.getAllTrack().done(function(tracks) {
-      var output = Mustache.render(this._template, {tracks: tracks.d});
+    var allTrackFetcher = new API.AllTrackFetcher();
+    allTrackFetcher.onDone = function(tracks) {
+      var output = Mustache.render(this._template, {tracks: tracks});
       this.$el.html(output);
-    }.bind(this));
+    }.bind(this);
+    allTrackFetcher.fetch();
   }
 
   window.TrackList = TrackList;

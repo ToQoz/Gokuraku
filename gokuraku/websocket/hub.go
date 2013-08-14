@@ -33,8 +33,8 @@ func (s *Hub) Run() {
 	http.Handle("/ws", s.connHandler())
 
 	go func() {
-		log.Printf("Gokuraku WebSocket Server: %s", gokuraku.Config.WebSocketAddr)
-		err := http.ListenAndServe(gokuraku.Config.WebSocketAddr, nil)
+		log.Printf("Gokuraku WebSocket Server: 0.0.0.0:%s", gokuraku.Config.WebSocketPort)
+		err := http.ListenAndServe("0.0.0.0:"+gokuraku.Config.WebSocketPort, nil)
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
@@ -43,7 +43,7 @@ func (s *Hub) Run() {
 	for {
 		select {
 		case <-s.UpdatedConnState:
-			if s.allConnIsReadyToPlay() == true {
+			if s.IsNoonePlaying() == true {
 				s.broadcastTrack()
 			}
 		case conn := <-s.AddConn:
@@ -59,7 +59,7 @@ func (s *Hub) Run() {
 func (s *Hub) addConn(c *Conn) {
 	s.Conns = append(s.Conns, c)
 
-	if s.allConnIsReadyToPlay() == true {
+	if s.IsNoonePlaying() == true {
 		s.broadcastTrack()
 	}
 }
@@ -72,18 +72,18 @@ func (s *Hub) removeConn(c *Conn) {
 		}
 	}
 
-	if s.allConnIsReadyToPlay() == true {
+	if s.IsNoonePlaying() == true {
 		s.broadcastTrack()
 	}
 }
 
-func (s *Hub) allConnIsReadyToPlay() bool {
+func (s *Hub) IsNoonePlaying() bool {
 	if len(s.Conns) == 0 {
 		return false
 	}
 
 	for _, c := range s.Conns {
-		if !c.IsReadyToPlay() {
+		if c.IsPlaying() {
 			return false
 		}
 	}
@@ -95,7 +95,9 @@ func (s *Hub) broadcastTrack() {
 	currentTrack := track.Next()
 
 	for _, conn := range s.Conns {
-		conn.Play <- currentTrack
+		if conn.IsReadyToPlay() {
+			conn.Play <- currentTrack
+		}
 	}
 }
 

@@ -11,17 +11,39 @@
 
     var form = new AddTrackForm(),
         player = new Player(),
-        ws = new WebSocket("ws://0.0.0.0:9099/ws"),
+        ws,
         trackList = new TrackList();
 
-    // websocket
-    ws.onmessage = function(msg) {
-      var data = JSON.parse(msg.data);
+    var retry_count = 0;
 
-      if (data.Type === "play") {
-        player.play(data.Track);
-      }
+
+    connectToWebSocket = function(port) {
+      ws = new WebSocket("ws://" + location.hostname + ":" + port + "/ws");
+
+      ws.onmessage = function(msg) {
+        var data = JSON.parse(msg.data);
+
+        if (data.Type === "play") {
+          player.play(data.Track);
+        }
+      };
+
+      ws.onclose = function() {
+        Util.alert("error", "Closed connection to WebSocket. Reconnecting after 3 sec.");
+        setTimeout(function () {
+          Util.clearAlert();
+          connectToWebSocket(port);
+        }, 3000);
+      };
     };
+
+    var webSocketPortFetcher = new API.WebSocketPortFetcher();
+
+    webSocketPortFetcher.onDone = function(port) {
+      connectToWebSocket(port);
+    };
+
+    webSocketPortFetcher.fetch();
 
     form.onSubmit = function() {
       trackList.update();
@@ -42,7 +64,7 @@
     };
 
     player.onFailure = function() {
-      ws.send(JSON.stringify({ Type: "waiting" }));
+      ws.send(JSON.stringify({ Type: "invalid" }));
     };
 
     player.onFinish = function() {

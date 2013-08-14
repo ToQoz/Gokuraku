@@ -5,10 +5,25 @@
 
   var Util = {
     log: log,
-    alert: alert
+    info: info,
+    error: error,
+    alert: alert,
+    clearAlert: clearAlert
   };
 
   function log(message, relatedObjects) {
+    _log("log", message, relatedObjects);
+  }
+
+  function info(message, relatedObjects) {
+    _log("info", message, relatedObjects);
+  }
+
+  function error(message, relatedObjects) {
+    _log("error", message, relatedObjects);
+  }
+
+  function _log(type, message, relatedObjects) {
     var now = new Date(),
         y = now.getFullYear(),
         m = _fillWithZero(2, now.getMonth() + 1),
@@ -21,7 +36,11 @@
     relatedObjects = relatedObjects ? relatedObjects : [];
 
     relatedObjects.unshift("[" + formatedTime + "] " + message);
-    console.log.apply(console, relatedObjects);
+    console[type].apply(console, relatedObjects);
+  }
+
+  function clearAlert() {
+    $("#alert-container").html("");
   }
 
   function alert(type, message) {

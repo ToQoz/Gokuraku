@@ -34,7 +34,12 @@ func (c *Conn) IsReadyToPlay() bool {
 	return c.State == WaitingState
 }
 
+func (c *Conn) IsPlaying() bool {
+	return c.State == PlayingState
+}
+
 func (c *Conn) updateState(state string) {
+	log.Printf("Update Conn#State: %s -> %s", c.State, state)
 	c.State = state
 	c.hub.UpdatedConnState <- c
 }

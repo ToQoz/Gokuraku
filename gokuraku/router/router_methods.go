@@ -23,6 +23,9 @@ func mapStatics() {
 	goweb.Map("/soundcloud_client_id", func(ctx context.Context) error {
 		return goweb.API.RespondWithData(ctx, gokuraku.Config.SoundcloudClientId)
 	})
+	goweb.Map("/websocket_port", func(ctx context.Context) error {
+		return goweb.API.RespondWithData(ctx, gokuraku.Config.WebSocketPort)
+	})
 }
 
 func mapTracks() {

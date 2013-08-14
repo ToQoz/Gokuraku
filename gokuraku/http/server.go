@@ -14,7 +14,7 @@ import (
 func Run() {
 	// HTTP
 	s := &httplib.Server{
-		Addr:           gokuraku.Config.HttpAddr,
+		Addr:           gokuraku.Config.HttpPort,
 		Handler:        goweb.DefaultHttpHandler(),
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -23,10 +23,10 @@ func Run() {
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-	listener, listenErr := net.Listen("tcp", gokuraku.Config.HttpAddr)
+	listener, listenErr := net.Listen("tcp", "0.0.0.0:"+gokuraku.Config.HttpPort)
 
 	if listenErr != nil {
-		log.Fatalf("Could not listen: %s", gokuraku.Config.HttpAddr)
+		log.Fatalf("Could not listen: 0.0.0.0:%s", gokuraku.Config.HttpPort)
 	}
 
 	go func() {
@@ -41,6 +41,6 @@ func Run() {
 		}
 	}()
 
-	log.Printf("Gokuraku HTTP Server: %s", gokuraku.Config.HttpAddr)
+	log.Printf("Gokuraku HTTP Server: 0.0.0.0:%s", gokuraku.Config.HttpPort)
 	log.Fatalf("Error in Serve: %s", s.Serve(listener))
 }

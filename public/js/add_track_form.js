@@ -41,7 +41,8 @@
     e.preventDefault();
 
     this.onSubmitStart();
-    API.addTrack(track_url).
+    var trackPoster = new API.TrackPoster();
+    trackPoster.post().
       done(this.onSubmitSuccess.bind(this)).
       fail(this.onSubmitFail.bind(this)).
       always(this.onSubmitFinish.bind(this));
