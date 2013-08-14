@@ -4,6 +4,11 @@
   });
 
   function main() {
+    if (!window.WebSocket) {
+      Util.alert("error", "This browser is not support WebSocket. Please access from browser that support WebSocket");
+      return;
+    }
+
     var form = new AddTrackForm(),
         player = new Player(),
         ws = new WebSocket("ws://0.0.0.0:9099/ws"),
