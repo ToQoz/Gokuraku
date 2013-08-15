@@ -14,7 +14,7 @@ Gokuraku is music server.
 ## CommandLine options
 
 ```
-$ go run main.go -help
+$ Gokuraku -help
   -p="9090": http server listen port
   -redis_addr=":6379": redis address(HOST:PORT)
   -redis_password="": redis password
