@@ -4,10 +4,6 @@ Gokuraku is music server.
 
 ![Screenshot](https://github.com/ToQoz/Gokuraku/raw/master/screenshot.png)
 
----
-
-![Logo](https://github.com/ToQoz/Gokuraku/raw/master/logo.png)
-
 ## Get Started
 
 **if you don't have soundcloud, please register [here](http://soundcloud.com/you/apps/new)**
@@ -25,3 +21,7 @@ $ go run main.go -help
   -soundcloud_client_id="": soundcloud client key
   -ws_p="9099": websocket server listen port
 ```
+
+---
+
+![Logo](https://github.com/ToQoz/Gokuraku/raw/master/logo.png)
