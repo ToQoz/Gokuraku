@@ -1,5 +1,5 @@
 (function(window, document, $) {
-  if (window.TrackList) {
+  if (gokuraku.TrackList) {
     return;
   }
 
@@ -14,7 +14,7 @@
   };
 
   function update() {
-    var allTrackFetcher = new API.AllTrackFetcher();
+    var allTrackFetcher = new gokuraku.API.AllTrackFetcher();
     allTrackFetcher.onDone = function(tracks) {
       var output = Mustache.render(this._template, {tracks: tracks});
       this.$el.html(output);
@@ -22,5 +22,5 @@
     allTrackFetcher.fetch();
   }
 
-  window.TrackList = TrackList;
+  gokuraku.TrackList = TrackList;
 })(window, window.document, jQuery);

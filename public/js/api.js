@@ -1,5 +1,5 @@
 (function(window, document, $) {
-  if (window.API) {
+  if (gokuraku.API) {
     return;
   }
 
@@ -36,9 +36,9 @@
       }
     }.bind(this)).fail(function(xhr) {
       if (this._retryCount < this._maxRetryCount) {
-        Util.alert('error', 'Fail to get /websocket_port. Retry after ' + this._retryInterval() / 1000 + "sec");
+        gokuraku.Util.alert('error', 'Fail to get /websocket_port. Retry after ' + this._retryInterval() / 1000 + "sec");
         setTimeout(function() {
-          Util.clearAlert();
+          gokuraku.Util.clearAlert();
           this._retryCount += 1;
           this.getWebSocketPort();
         }.bind(this), this._retryInterval());
@@ -85,7 +85,7 @@
   };
 
   TrackPoster = APIClient.clone();
-  TrackPoster.prototype.post = function TrackPoster_post() {
+  TrackPoster.prototype.post = function TrackPoster_post(url) {
     return $.ajax({
       type: "POST",
       url: "/tracks",
@@ -99,13 +99,11 @@
 
 
   // exports
-  API = {
+  gokuraku.API = {
     AllTrackFetcher: AllTrackFetcher,
     WebSocketPortFetcher: WebSocketPortFetcher,
     TrackPoster: TrackPoster,
     SoundcloudClientIdFetcher: SoundcloudClientIdFetcher,
     SoundcloudSDKFetcher: SoundcloudSDKFetcher
   };
-
-  window.API = API;
 })(window, window.document, jQuery);

@@ -4,45 +4,22 @@
   });
 
   function main() {
-    if (!window.WebSocket) {
-      Util.alert("error", "This browser is not support WebSocket. Please access from browser that support WebSocket");
-      return;
-    }
+    var form = new gokuraku.AddTrackForm(),
+        player = new gokuraku.Player(),
+        trackList = new gokuraku.TrackList(),
+        ws = null,
+        webSocketPortFetcher = new gokuraku.API.WebSocketPortFetcher();
 
-    var form = new AddTrackForm(),
-        player = new Player(),
-        ws,
-        trackList = new TrackList();
-
-    var retry_count = 0;
-
-
-    connectToWebSocket = function(port) {
-      ws = new WebSocket("ws://" + location.hostname + ":" + port + "/ws");
-
-      ws.onmessage = function(msg) {
+    webSocketPortFetcher.onDone = function(port) {
+      ws = new gokuraku.WebSocket(port);
+      ws.onmessage(function(msg) {
         var data = JSON.parse(msg.data);
 
         if (data.Type === "play") {
           player.play(data.Track);
         }
-      };
-
-      ws.onclose = function() {
-        Util.alert("error", "Closed connection to WebSocket. Reconnecting after 3 sec.");
-        setTimeout(function () {
-          Util.clearAlert();
-          connectToWebSocket(port);
-        }, 3000);
-      };
+      });
     };
-
-    var webSocketPortFetcher = new API.WebSocketPortFetcher();
-
-    webSocketPortFetcher.onDone = function(port) {
-      connectToWebSocket(port);
-    };
-
     webSocketPortFetcher.fetch();
 
     form.onSubmit = function() {

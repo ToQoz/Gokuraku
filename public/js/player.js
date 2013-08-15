@@ -1,5 +1,5 @@
 (function(window, document, $) {
-  if (window.Player) {
+  if (gokuraku.Player) {
     return;
   }
 
@@ -53,9 +53,9 @@
         }
 
         // Retry init SDK
-        Util.alert("error", "Fail to initialize soundcloud sdk. Retry after " + this._initSDKRetryInterval() / 1000 + "sec.");
+        gokuraku.Util.alert("error", "Fail to initialize soundcloud sdk. Retry after " + this._initSDKRetryInterval() / 1000 + "sec.");
         setTimeout(function() {
-          Util.clearAlert();
+          gokuraku.Util.clearAlert();
           this._initSDKRetryCount += 1;
           this.play(track);
         }.bind(this), this._initSDKRetryInterval());
@@ -79,7 +79,7 @@
       position: pos,
       volume: this._volume,
       onfinish: function Player_onfinish() {
-        Util.info("Finish to play: " + this._track.Title, [this._track, this._sound]);
+        gokuraku.Util.info("Finish to play: " + this._track.Title, [this._track, this._sound]);
         if (this.onFinish) {
           this.onFinish();
         }
@@ -90,19 +90,19 @@
         }
       }.bind(this),
       ontimeout: function() {
-        Util.error("error: Sound#ontimeout", [this._track, this._sound]);
+        gokuraku.Util.error("error: Sound#ontimeout", [this._track, this._sound]);
         this._onFailToPlay();
       }.bind(this),
       ondataerror: function() {
-        Util.error("error: Sound#ondataerror", [this._track, this._sound]);
+        gokuraku.Util.error("error: Sound#ondataerror", [this._track, this._sound]);
         this._onFailToPlay();
       }.bind(this),
       onsuspend: function() {
-        Util.error("error: Sound#onsuspend", [this._track, this._sound]);
+        gokuraku.Util.error("error: Sound#onsuspend", [this._track, this._sound]);
         this._onFailToPlay();
       }.bind(this),
       onfailure: function() {
-        Util.error("error: Sound#onfailure", [this._track, this._sound]);
+        gokuraku.Util.error("error: Sound#onfailure", [this._track, this._sound]);
         this._onFailToPlay();
       }.bind(this)
     }, function(sound) {
@@ -116,13 +116,13 @@
         if (+this._sound.readyState === 2) {
           clearInterval(i);
 
-          Util.error("Sound#readyState is 2", [this._track, this._sound]);
+          gokuraku.Util.error("Sound#readyState is 2", [this._track, this._sound]);
           this._onFailToPlay();
         } else if (+this._sound.readyState === 3) {
           clearInterval(i);
-          Util.clearAlert();
+          gokuraku.Util.clearAlert();
 
-          Util.info("Now Playing(play at pos: " + pos + "): " + this._track.Title, [this._track, this._sound]);
+          gokuraku.Util.info("Now Playing(play at pos: " + pos + "): " + this._track.Title, [this._track, this._sound]);
           document.title = "▶ " + this._track.Title + " | 極楽";
           this._playRetryCount = 0;
         }
@@ -131,13 +131,13 @@
   }
 
   function _onFailToPlay() {
-    Util.error("Fail to  play: " + this._track.Title, [this._track, this._sound]);
+    gokuraku.Util.error("Fail to  play: " + this._track.Title, [this._track, this._sound]);
     if (this.onFailure) {
       this.onFailure();
     }
 
     // Retry play sound
-    Util.alert("error", "Fail to play Track. Retry after " + this._playRetryInterval() / 1000 + "sec.");
+    gokuraku.Util.alert("error", "Fail to play Track. Retry after " + this._playRetryInterval() / 1000 + "sec.");
     setTimeout(function() {
       this._playRetryCount += 1;
       this._play(this._track);
@@ -167,7 +167,7 @@
 
   // Client key
   function _fetchSoundcloudClientId() {
-    var soundcloudClientIdFetcher = new API.SoundcloudClientIdFetcher();
+    var soundcloudClientIdFetcher = new gokuraku.API.SoundcloudClientIdFetcher();
     soundcloudClientIdFetcher.onDone = function(soundcloud_client_id) {
       this._soundcloud_client_id = soundcloud_client_id;
     }.bind(this);
@@ -185,7 +185,7 @@
   }
 
   function _loadSDK() {
-    soundcloudSDKFetcher = new API.SoundcloudSDKFetcher();
+    soundcloudSDKFetcher = new gokuraku.API.SoundcloudSDKFetcher();
     soundcloudSDKFetcher.onDone = function() {
       if (typeof SC !== "undefined") {
         this._isSDKLoaded = true;
@@ -195,5 +195,5 @@
     return soundcloudSDKFetcher.fetch();
   }
 
-  window.Player = Player;
+  gokuraku.Player = Player;
 })(window, window.document, jQuery);

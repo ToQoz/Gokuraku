@@ -1,5 +1,5 @@
 (function(window, document, $) {
-  if (window.AddTrackForm) {
+  if (gokuraku.AddTrackForm) {
     return;
   }
 
@@ -41,8 +41,8 @@
     e.preventDefault();
 
     this.onSubmitStart();
-    var trackPoster = new API.TrackPoster();
-    trackPoster.post().
+    var trackPoster = new gokuraku.API.TrackPoster();
+    trackPoster.post(track_url).
       done(this.onSubmitSuccess.bind(this)).
       fail(this.onSubmitFail.bind(this)).
       always(this.onSubmitFinish.bind(this));
@@ -51,7 +51,7 @@
   function onSubmitSuccess(resp) {
     var track = resp.d;
 
-    Util.alert("info", 'Added Track: ' + track.Title);
+    gokuraku.Util.alert("info", 'Added Track: ' + track.Title);
 
     this.urlField().val("");
 
@@ -61,7 +61,7 @@
   }
 
   function onSubmitFail(xhr) {
-    Util.alert("error", xhr.responseJSON.e.join(" "));
+    gokuraku.Util.alert("error", xhr.responseJSON.e.join(" "));
   }
 
   function onSubmitFinish() {
@@ -73,5 +73,5 @@
     this.submitButton().addClass('disabled').text("Adding...");
   }
 
-  window.AddTrackForm = AddTrackForm;
+  gokuraku.AddTrackForm = AddTrackForm;
 })(window, window.document, jQuery);
