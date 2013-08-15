@@ -25,6 +25,7 @@ $ Gokuraku -help
 ## Requirements
 
 - Go1.1
+- Redis
 - mercurial (require to install code.google.com/p/go.net/websocket)
 - bzr (require to install github.com/stretchr/goweb)
 
