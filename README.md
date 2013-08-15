@@ -1,5 +1,9 @@
 # Gokuraku
 
+Gokuraku is music server.
+
+![Logo](https://github.com/ToQoz/Gokuraku/raw/master/logo.jpg)
+
 ## Get Started
 
 **if you don't have soundcloud, please register [here](http://soundcloud.com/you/apps/new)**
