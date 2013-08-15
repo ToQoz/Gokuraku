@@ -22,6 +22,11 @@ $ go run main.go -help
   -ws_p="9099": websocket server listen port
 ```
 
+## Requirements
+
+- mercurial (require to install code.google.com/p/go.net/websocket)
+- bzr (require to install github.com/stretchr/goweb)
+
 ---
 
 ![Logo](https://github.com/ToQoz/Gokuraku/raw/master/logo.png)
