@@ -2,7 +2,7 @@
 
 Gokuraku is music server.
 
-![Logo](https://github.com/ToQoz/Gokuraku/raw/master/logo.jpg)
+![Logo](https://github.com/ToQoz/Gokuraku/raw/master/logo.png)
 
 ## Get Started
 
