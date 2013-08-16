@@ -1,5 +1,7 @@
 # Gokuraku
 
+![CI status](https://travis-ci.org/ToQoz/Gokuraku.png)
+
 Gokuraku is music server.
 
 ![Screenshot](https://github.com/ToQoz/Gokuraku/raw/master/screenshot.png)
