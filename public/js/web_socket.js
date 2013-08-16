@@ -30,7 +30,7 @@
 
   function WebSocket_connect() {
     this._ws = new window.WebSocket("ws://" + location.hostname + ":" + this._port + "/ws");
-    this.onclose = function() {
+    this._ws.onclose = function() {
       gokuraku.Util.alert("error", "Closed connection to WebSocket. Reconnecting after 3 sec.");
       setTimeout(function () {
         gokuraku.Util.clearAlert();
