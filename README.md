@@ -12,6 +12,7 @@ Gokuraku is music server.
 
 - Install. `go get github.com/ToQoz/Gokuraku`
 - Run. `Gokuraku -soundcloud_client_id=YOUR_SOUNDCLOUD_CLIENT_ID`
+- (Update) `go get -u github.com/ToQoz/Gokuraku`
 
 ## CommandLine options
 
