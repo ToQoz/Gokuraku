@@ -24,6 +24,7 @@
 
     form.onSubmit = function() {
       trackList.update();
+      ws.send(JSON.stringify({ Type: 'add-track' }));
     };
 
     player.onPlay = function(track) {
@@ -37,15 +38,15 @@
       };
 
       $('#track-container').html(Mustache.render(template, track_for_template));
-      ws.send(JSON.stringify({ Type: "playing" }));
+      ws.send(JSON.stringify({ Type: "update-state", Body: "playing" }));
     };
 
     player.onFailure = function() {
-      ws.send(JSON.stringify({ Type: "invalid" }));
+      ws.send(JSON.stringify({ Type: "update-state", Body: "invalid" }));
     };
 
     player.onFinish = function() {
-      ws.send(JSON.stringify({ Type: "waiting" }));
+      ws.send(JSON.stringify({ Type: "update-state", Body: "waiting" }));
     };
   }
 })(window, window.document, jQuery);

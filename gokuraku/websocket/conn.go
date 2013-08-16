@@ -79,7 +79,7 @@ func (c *Conn) ReadPump() {
 			var err error
 			var msg []byte
 			err = websocket.Message.Receive(c.ws, &msg)
-			var msgMap map[string]interface{}
+			var msgMap map[string]string
 			json.Unmarshal(msg, &msgMap)
 			t := msgMap["Type"]
 
@@ -90,10 +90,10 @@ func (c *Conn) ReadPump() {
 				return
 			} else {
 				switch {
-				case t == WaitingState:
-					c.updateState(WaitingState)
-				case t == PlayingState:
-					c.updateState(PlayingState)
+				case t == "update-state":
+					c.updateState(msgMap["Body"])
+				case t == "add-track":
+					c.hub.AddTrack <- c
 				}
 			}
 		}

@@ -12,6 +12,7 @@ type Hub struct {
 	Conns            []*Conn
 	AddConn          chan *Conn
 	RemoveConn       chan *Conn
+	AddTrack         chan *Conn
 	UpdatedConnState chan *Conn
 }
 
@@ -25,6 +26,7 @@ func NewHub() Hub {
 		Conns:            make([]*Conn, 0),
 		AddConn:          make(chan *Conn),
 		RemoveConn:       make(chan *Conn),
+		AddTrack:         make(chan *Conn),
 		UpdatedConnState: make(chan *Conn),
 	}
 }
@@ -52,6 +54,10 @@ func (s *Hub) Run() {
 		case conn := <-s.RemoveConn:
 			s.removeConn(conn)
 			log.Println("Number of clients connected ...", len(s.Conns))
+		case <-s.AddTrack:
+			if s.IsNoonePlaying() == true {
+				s.broadcastTrack()
+			}
 		}
 	}
 }
@@ -92,7 +98,12 @@ func (s *Hub) IsNoonePlaying() bool {
 }
 
 func (s *Hub) broadcastTrack() {
-	currentTrack := track.Next()
+	currentTrack, err := track.Next()
+
+	if err != nil {
+		log.Println(err.Error)
+		return
+	}
 
 	for _, conn := range s.Conns {
 		if conn.IsReadyToPlay() {
@@ -115,7 +126,12 @@ func (s *Hub) connHandler() websocket.Handler {
 		conn := NewConn(ws, s)
 
 		go conn.WritePump()
-		conn.Play <- track.GetCurrent()
+		currentTrack, err := track.GetCurrent()
+		if err == nil {
+			conn.Play <- currentTrack
+		} else {
+			log.Println(err.Error())
+		}
 		s.AddConn <- conn
 		conn.ReadPump()
 		defer ws.Close()

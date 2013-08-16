@@ -26,80 +26,17 @@ type Track struct {
 	Type         string `redis:"type"`
 }
 
-type CurrentTrack struct {
-	TrackId   string `redis:"track_id"`
-	StartedAt string `redis:"started_at"`
-	*Track
-}
-
-func GetRandam() *Track {
-	redisClient := redis.Get()
-	defer redisClient.Close()
-
-	track_id, _ := redis.String(redisClient.Do("SRANDMEMBER", "gokuraku:track-ids"))
-	values, err := redis.Values(redisClient.Do("HGETALL", "gokuraku:track:"+track_id))
-	if err != nil {
-		panic(err)
-	}
-
-	track := Track{}
-	err = redis.ScanStruct(values, &track)
-	if err != nil {
-		panic(err)
-	}
-
-	return &track
-}
-
-func Next() *CurrentTrack {
-	UpdateCurrent()
-	return GetCurrent()
-}
-
-func UpdateCurrent() error {
+func TrackCount() int {
 	var err error
 	redisClient := redis.Get()
 	defer redisClient.Close()
-
-	t := GetRandam()
-	err = t.Validate()
-
-	if err != nil {
-		t.Destroy()
-		t = GetRandam()
-	}
-
-	_, err = redisClient.Do(
-		"HMSET", "gokuraku:current-track",
-		"track_id", t.Id,
-		"started_at", strconv.FormatInt(time.Now().Unix(), 10),
-	)
-
-	return err
-}
-
-func GetCurrent() *CurrentTrack {
-	redisClient := redis.Get()
-	defer redisClient.Close()
-
-	exists, _ := redis.Bool(redisClient.Do("EXISTS", "gokuraku:current-track"))
-	if exists == false {
-		UpdateCurrent()
-		return GetCurrent()
-	}
-
-	values, err := redis.Values(redisClient.Do("HGETALL", "gokuraku:current-track"))
-
-	currentTrack := CurrentTrack{}
-	err = redis.ScanStruct(values, &currentTrack)
-
-	track, err := Find(currentTrack.TrackId)
+	count, err := redis.Int(redisClient.Do("SCARD", "gokuraku:track-ids"))
 
 	if err != nil {
 		log.Panicln(err)
 	}
 
-	return &CurrentTrack{currentTrack.TrackId, currentTrack.StartedAt, &track}
+	return count
 }
 
 func CreateFromUrl(track_url string) (*Track, error) {
@@ -163,25 +100,6 @@ func NewFromUrl(track_url string) (*Track, error) {
 	return nil, errors.New("Unknown service " + parsedUrl.Host)
 }
 
-func (t *Track) Destroy() error {
-	var err error
-	redisClient := redis.Get()
-	defer redisClient.Close()
-	_, err = redisClient.Do("SREM", "gokuraku:track-ids", t.Id)
-
-	if err != nil {
-		log.Panicln(err)
-	}
-
-	_, err = redisClient.Do("DEL", "gokuraku:track:"+t.Id)
-
-	if err != nil {
-		log.Panicln(err)
-	}
-
-	return nil
-}
-
 func (t *Track) Save() error {
 	var err error
 	redisClient := redis.Get()
@@ -225,11 +143,11 @@ func Page(page_num int) ([]*Track, error) {
 	redisClient := redis.Get()
 	defer redisClient.Close()
 
-	track_ids, _ := redis.Strings(redisClient.Do("SORT", "gokuraku:track-ids", "By", "gokuraku:track:*->created_at", "LIMIT", 10*page_num, 10*(page_num+1), "ALPHA", "DESC"))
+	trackIds, _ := redis.Strings(redisClient.Do("SORT", "gokuraku:track-ids", "By", "gokuraku:track:*->created_at", "LIMIT", 10*page_num, 10*(page_num+1), "ALPHA", "DESC"))
 
 	tracks := []*Track{}
-	for _, track_id := range track_ids {
-		track, err := Find(track_id)
+	for _, trackId := range trackIds {
+		track, err := Find(trackId)
 
 		if err != nil {
 			log.Panicln(err)
@@ -245,11 +163,11 @@ func All() ([]*Track, error) {
 	redisClient := redis.Get()
 	defer redisClient.Close()
 
-	track_ids, _ := redis.Strings(redisClient.Do("SORT", "gokuraku:track-ids", "By", "gokuraku:track:*->created_at", "ALPHA", "DESC"))
+	trackIds, _ := redis.Strings(redisClient.Do("SORT", "gokuraku:track-ids", "By", "gokuraku:track:*->created_at", "ALPHA", "DESC"))
 
 	tracks := []*Track{}
-	for _, track_id := range track_ids {
-		track, err := Find(track_id)
+	for _, trackId := range trackIds {
+		track, err := Find(trackId)
 
 		if err != nil {
 			log.Panicln(err)
@@ -279,6 +197,23 @@ func Find(id string) (Track, error) {
 	return track, nil
 }
 
+func (t *Track) Destroy() {
+	var err error
+	redisClient := redis.Get()
+	defer redisClient.Close()
+	_, err = redisClient.Do("SREM", "gokuraku:track-ids", t.Id)
+
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	_, err = redisClient.Do("DEL", "gokuraku:track:"+t.Id)
+
+	if err != nil {
+		log.Panicln(err)
+	}
+}
+
 func (t Track) Validate() error {
 	if t.Id == "" {
 		return errors.New("This item doesn't have ID")
@@ -301,4 +236,23 @@ func (t Track) Validate() error {
 	}
 
 	return nil
+}
+
+func getRandam() *Track {
+	redisClient := redis.Get()
+	defer redisClient.Close()
+
+	trackId, _ := redis.String(redisClient.Do("SRANDMEMBER", "gokuraku:track-ids"))
+	values, err := redis.Values(redisClient.Do("HGETALL", "gokuraku:track:"+trackId))
+	if err != nil {
+		panic(err)
+	}
+
+	track := Track{}
+	err = redis.ScanStruct(values, &track)
+	if err != nil {
+		panic(err)
+	}
+
+	return &track
 }
