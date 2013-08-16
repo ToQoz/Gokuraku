@@ -43,7 +43,7 @@ func (api *API) Resolve(url string) (*Item, error) {
 	resp, err := http.Get(api_url)
 
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return nil, errors.New(fmt.Sprintf("Fail to get <%s>", api_url))
 	}
 
@@ -57,7 +57,7 @@ func (api *API) Resolve(url string) (*Item, error) {
 	err = json.NewDecoder(resp.Body).Decode(item)
 
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return nil, errors.New(fmt.Sprintf("Fail to convert json from <%s>", api_url))
 	}
 
