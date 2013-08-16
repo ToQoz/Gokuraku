@@ -25,7 +25,7 @@ func (c *TracksController) Create(ctx context.Context) error {
 	}
 
 	track_url := dataMap["Url"].(string)
-	track, err := track.CreateFromUrl(track_url)
+	track, err := track.CreateTrackFromUrl(track_url)
 
 	if err != nil {
 		log.Println(err.Error())
